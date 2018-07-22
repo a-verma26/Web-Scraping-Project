@@ -13,6 +13,14 @@ def reader(filename):
 		quotes=list(csv_Reader)
 	return quotes
 	
+def write_quote(quotes):
+	with io.open("scrap.csv", "w", encoding="utf-8") as file: 
+		headers=['text','author','url']
+		csv_writer=DictWriter(file,fieldnames=headers)
+		csv_writer.writeheader()
+		for x in quotes:
+			csv_writer.writerow(x)
+	
 		#print(bio_data)
 	#lets play the game
 def start_game(author_details):
