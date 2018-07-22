@@ -1,4 +1,4 @@
-from csv import writer,DictReader
+from csv import writer,DictReader,DictWriter
 from bs4 import BeautifulSoup
 import requests
 import io
