@@ -1,0 +1,65 @@
+from csv import writer,DictReader
+from bs4 import BeautifulSoup
+import requests
+import io
+from time import sleep
+from random import choice
+import pyfiglet
+base_url="http://quotes.toscrape.com/"
+next_url="/page/1"
+def reader(filename):
+	with io.open(filename,"r",encoding="utf-8") as file:
+		csv_Reader=DictReader(file)
+		quotes=list(csv_Reader)
+	return quotes
+	
+		#print(bio_data)
+	#lets play the game
+def start_game(author_details):
+	chances=4
+	while True:
+		print(pyfiglet.figlet_format("WELCOME"))
+		i=0
+		print("who said this quote :")
+		q=choice(author_details)
+		print(q['text'])
+		ans=(q['author'].lower())
+		print(f"ans={ans}")
+		while chances:
+			player=input().lower()
+			if ans==player:
+				print("Thats the rigth answer!")
+				break
+				#if ans!=player
+			print("thats the wrong answer!")
+			chances-=1
+			if chances==3:
+				author_url=f"{base_url}{q['url']}"
+				details=requests.get(f"{author_url}")
+				soup1=BeautifulSoup(details.text,"html.parser")
+				bio_date=(soup1.find(class_="author-born-date").get_text())
+				bio_location=soup1.find(class_="author-born-location").get_text()
+				print(f"hint: the Author is born on {bio_date} in {bio_location}")
+				print("NOW GUESS!")
+			elif chances==2:
+				print(f"hint: the Author name starts from  {q['author'][0]}")
+				print("NOW GUESS!")
+			elif chances==1:
+				last_initial=q['author'].split(" ")[1][0]
+				print(f"hint: the Author surname starts from  {last_initial}")
+				print("NOW GUESS!")
+			else:
+				print("u lose the game!")
+
+		print("do u wanna play again y/n?")
+		if input()=="y":
+			chances=4
+		else:
+			print("Thanks for playing! Have a good day")#if no
+			break
+			
+quotes=reader("scrap.csv")
+start_game(quotes)
+
+
+
